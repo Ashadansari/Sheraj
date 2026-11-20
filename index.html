@@ -14,6 +14,14 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    try {
+      if (localStorage.getItem("sheraj-portfolio-theme") === "light") {
+        document.documentElement.dataset.theme = "light";
+        document.querySelector('meta[name="theme-color"]')?.setAttribute("content", "#f7f5f0");
+      }
+    } catch {}
+  </script>
   <link rel="stylesheet" href="css/style.css">
   <script src="js/script.js" defer></script>
 </head>
@@ -29,12 +37,20 @@
       <a class="nav-link nav-link--overflow" href="#education" data-nav="education" aria-label="Education"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m2.5 9 9.5-5 9.5 5-9.5 5zM6 11v5c3.5 2.7 8.5 2.7 12 0v-5M21.5 9v7"/></svg><span>Education</span></a>
       <a class="nav-link nav-link--primary" href="#contact" data-nav="contact" aria-label="Contact"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="m4 7 8 6 8-6"/></svg><span>Contact</span></a>
     </nav>
-    <button class="nav-more" type="button" aria-expanded="false" aria-controls="nav-overflow"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg><span>More</span></button>
-    <nav class="nav-overflow" id="nav-overflow" aria-label="More navigation" hidden>
+    <button class="mobile-menu-toggle" type="button" aria-expanded="false" aria-controls="nav-overflow" aria-label="Open navigation menu"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg><span>Menu</span></button>
+    <nav class="nav-overflow" id="nav-overflow" aria-label="Mobile navigation" hidden>
+      <a class="nav-link" href="#home" data-nav="home" aria-label="Home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3.5 10 8.5-7 8.5 7v10.5h-6v-6h-5v6h-6z"/></svg><span>Home</span></a>
+      <a class="nav-link" href="#about" data-nav="about" aria-label="About"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7.5" r="3.5"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg><span>About</span></a>
       <a class="nav-link" href="#expertise" data-nav="expertise"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 9 5-9 5-9-5z"/><path d="m3 12 9 5 9-5M3 16l9 5 9-5"/></svg><span>Interests</span></a>
+      <a class="nav-link" href="#projects" data-nav="projects" aria-label="Projects"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V4h11v17M15 9h5v12M2 21h20M8 8h3M8 12h3M8 16h3M17.5 13h.1M17.5 17h.1"/></svg><span>Projects</span></a>
       <a class="nav-link" href="#skills" data-nav="skills"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 20 12.5-12.5M14 4l6 6M3 21l4-.8L3.8 17zM5 5h3M5 9h2M5 13h3M16 19h3M18 16v3"/></svg><span>Capabilities</span></a>
       <a class="nav-link" href="#education" data-nav="education"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m2.5 9 9.5-5 9.5 5-9.5 5zM6 11v5c3.5 2.7 8.5 2.7 12 0v-5M21.5 9v7"/></svg><span>Education</span></a>
+      <a class="nav-link" href="#contact" data-nav="contact" aria-label="Contact"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="m4 7 8 6 8-6"/></svg><span>Contact</span></a>
     </nav>
+    <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light theme" aria-pressed="false" title="Switch to light theme">
+      <svg class="theme-icon theme-icon--sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg>
+      <svg class="theme-icon theme-icon--moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.8 15.5A8.8 8.8 0 0 1 8.5 3.2 8.8 8.8 0 1 0 20.8 15.5Z"/></svg>
+    </button>
   </header>
 
   <main>
@@ -43,7 +59,10 @@
       <div class="hero-copy reveal">
         <span class="eyebrow"><i></i> CIVIL ENGINEERING · INDIA</span>
         <p class="hero-kicker">SHERAJ ALAM <span>— B.TECH CIVIL ENGINEER</span></p>
-        <h1 id="hero-title">Engineering<br><em>spaces.</em></h1>
+        <div class="hero-title-row">
+          <h1 id="hero-title">Engineering<br><em>spaces.</em></h1>
+          <div class="hero-inline-photo" aria-hidden="true"><img src="assets/images/sheraj-alam.webp" alt="" width="1172" height="1342"></div>
+        </div>
         <p class="hero-description">Structural thinking and a considered approach to the places we build, use and share.</p>
         <a class="button button--blue" href="#projects">Explore selected work <span aria-hidden="true">↗</span></a>
         <a class="scroll-down" href="#about" aria-label="Scroll down to about Sheraj"><span>SCROLL TO EXPLORE</span><b aria-hidden="true">↓</b></a>

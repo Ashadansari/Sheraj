@@ -1,9 +1,11 @@
 (() => {
   const header = document.querySelector(".site-header");
   const progress = document.querySelector(".scroll-progress");
-  const menuButton = document.querySelector(".nav-more");
+  const menuButton = document.querySelector(".mobile-menu-toggle");
   const overflowMenu = document.querySelector("#nav-overflow");
   const year = document.querySelector("#year");
+  const themeToggle = document.querySelector("#theme-toggle");
+  const themeColorMeta = document.querySelector('meta[name="theme-color"]');
   const contactForm = document.querySelector("#contact-form");
   const formNote = document.querySelector("#form-note");
   const navLinks = [...document.querySelectorAll("[data-nav]")];
@@ -13,6 +15,35 @@
   const skillProgress = document.querySelector(".carousel-progress span");
 
   year.textContent = String(new Date().getFullYear());
+
+  function applyTheme(theme, persist = false) {
+    const isLight = theme === "light";
+    document.documentElement.dataset.theme = isLight ? "light" : "dark";
+    themeToggle.setAttribute("aria-pressed", String(isLight));
+    const nextTheme = isLight ? "dark" : "light";
+    themeToggle.setAttribute("aria-label", `Switch to ${nextTheme} theme`);
+    themeToggle.setAttribute("title", `Switch to ${nextTheme} theme`);
+    if (themeColorMeta) themeColorMeta.setAttribute("content", isLight ? "#f7f5f0" : "#191e24");
+    if (persist) {
+      try {
+        localStorage.setItem("sheraj-portfolio-theme", isLight ? "light" : "dark");
+      } catch {
+        // Theme switching still works for this visit when storage is unavailable.
+      }
+    }
+  }
+
+  let savedTheme = null;
+  try {
+    savedTheme = localStorage.getItem("sheraj-portfolio-theme");
+  } catch {
+    // Use the default dark theme when browser storage is unavailable.
+  }
+  applyTheme(savedTheme === "light" ? "light" : "dark");
+  themeToggle.addEventListener("click", () => {
+    const nextTheme = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+    applyTheme(nextTheme, true);
+  });
 
   function clearContactForm() {
     contactForm.reset();
@@ -69,6 +100,7 @@
   function closeMenu({ restoreFocus = false } = {}) {
     if (menuButton.getAttribute("aria-expanded") !== "true") return;
     menuButton.setAttribute("aria-expanded", "false");
+    menuButton.setAttribute("aria-label", "Open navigation menu");
     overflowMenu.hidden = true;
     if (restoreFocus) menuButton.focus();
   }
@@ -76,6 +108,7 @@
   menuButton.addEventListener("click", () => {
     const open = menuButton.getAttribute("aria-expanded") !== "true";
     menuButton.setAttribute("aria-expanded", String(open));
+    menuButton.setAttribute("aria-label", open ? "Close navigation menu" : "Open navigation menu");
     overflowMenu.hidden = !open;
     if (open) overflowMenu.querySelector("a[href]").focus();
   });
