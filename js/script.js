@@ -14,19 +14,6 @@
 
   year.textContent = String(new Date().getFullYear());
 
-  navLinks.forEach((link) => {
-    link.addEventListener("focus", () => {
-      const nav = link.closest(".primary-nav");
-      if (!nav || nav.scrollWidth <= nav.clientWidth) return;
-      const navRect = nav.getBoundingClientRect();
-      const linkRect = link.getBoundingClientRect();
-      const visibleLeft = navRect.left + nav.clientLeft;
-      const visibleRight = visibleLeft + nav.clientWidth;
-      if (linkRect.left < visibleLeft) nav.scrollLeft -= visibleLeft - linkRect.left;
-      else if (linkRect.right > visibleRight) nav.scrollLeft += linkRect.right - visibleRight;
-    });
-  });
-
   function applyTheme(theme, persist = false) {
     const isLight = theme === "light";
     document.documentElement.dataset.theme = isLight ? "light" : "dark";
@@ -108,7 +95,10 @@
     });
   });
 
-  if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  const supportsIntersectionObserver = "IntersectionObserver" in window;
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  if (supportsIntersectionObserver && !prefersReducedMotion) {
     const revealObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
@@ -117,7 +107,11 @@
       });
     }, { threshold: 0.12 });
     document.querySelectorAll(".reveal").forEach((element) => revealObserver.observe(element));
+  } else {
+    document.querySelectorAll(".reveal").forEach((element) => element.classList.add("is-visible"));
+  }
 
+  if (supportsIntersectionObserver) {
     const sectionObserver = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
@@ -130,8 +124,6 @@
       });
     }, { rootMargin: "-32% 0px -55% 0px" });
     document.querySelectorAll("main section[id]").forEach((section) => sectionObserver.observe(section));
-  } else {
-    document.querySelectorAll(".reveal").forEach((element) => element.classList.add("is-visible"));
   }
 
   contactForm.addEventListener("submit", (event) => {
