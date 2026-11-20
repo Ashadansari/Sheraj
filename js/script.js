@@ -1,8 +1,6 @@
 (() => {
   const header = document.querySelector(".site-header");
   const progress = document.querySelector(".scroll-progress");
-  const menuButton = document.querySelector(".mobile-menu-toggle");
-  const overflowMenu = document.querySelector("#nav-overflow");
   const year = document.querySelector("#year");
   const themeToggle = document.querySelector("#theme-toggle");
   const themeColorMeta = document.querySelector('meta[name="theme-color"]');
@@ -15,6 +13,19 @@
   const skillProgress = document.querySelector(".carousel-progress span");
 
   year.textContent = String(new Date().getFullYear());
+
+  navLinks.forEach((link) => {
+    link.addEventListener("focus", () => {
+      const nav = link.closest(".primary-nav");
+      if (!nav || nav.scrollWidth <= nav.clientWidth) return;
+      const navRect = nav.getBoundingClientRect();
+      const linkRect = link.getBoundingClientRect();
+      const visibleLeft = navRect.left + nav.clientLeft;
+      const visibleRight = visibleLeft + nav.clientWidth;
+      if (linkRect.left < visibleLeft) nav.scrollLeft -= visibleLeft - linkRect.left;
+      else if (linkRect.right > visibleRight) nav.scrollLeft += linkRect.right - visibleRight;
+    });
+  });
 
   function applyTheme(theme, persist = false) {
     const isLight = theme === "light";
@@ -95,34 +106,6 @@
         item.hidden = selectedCategory !== "all" && item.dataset.category !== selectedCategory;
       });
     });
-  });
-
-  function closeMenu({ restoreFocus = false } = {}) {
-    if (menuButton.getAttribute("aria-expanded") !== "true") return;
-    menuButton.setAttribute("aria-expanded", "false");
-    menuButton.setAttribute("aria-label", "Open navigation menu");
-    overflowMenu.hidden = true;
-    if (restoreFocus) menuButton.focus();
-  }
-
-  menuButton.addEventListener("click", () => {
-    const open = menuButton.getAttribute("aria-expanded") !== "true";
-    menuButton.setAttribute("aria-expanded", String(open));
-    menuButton.setAttribute("aria-label", open ? "Close navigation menu" : "Open navigation menu");
-    overflowMenu.hidden = !open;
-    if (open) overflowMenu.querySelector("a[href]").focus();
-  });
-  navLinks.forEach((link) => {
-    link.addEventListener("click", () => closeMenu());
-  });
-  document.addEventListener("click", (event) => {
-    if (!header.contains(event.target)) closeMenu();
-  });
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape" && menuButton.getAttribute("aria-expanded") === "true") {
-      event.preventDefault();
-      closeMenu({ restoreFocus: true });
-    }
   });
 
   if ("IntersectionObserver" in window && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
